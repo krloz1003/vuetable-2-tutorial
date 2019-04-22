@@ -14,6 +14,8 @@
 		:fields=fields
 		pagination-path=""
 		:per-page="20"
+    :multi-sort="true"
+    multi-sort-key="ctrl"
 		@vuetable:pagination-data="onPaginationData"
 		></vuetable>
 		<div class="vuetable-pagination ui basic segment grid">
@@ -43,23 +45,36 @@ export default {
   },
   data() {
   	return {
-  		fields: [
-  			'name', 'email',
-  			{
+      css: {
+          ascendingIcon: 'glyphicon glyphicon-chevron-up',
+          descendingIcon: 'glyphicon glyphicon-chevron-down'
+      },
+  		fields: [{
+  			name: 'name',
+        sortField: 'name'
+      }, { 
+        name: 'email',
+        sortField: 'email',
+        direction: 'asc'
+      }, {
   				name: 'birthdate',
+          sortField: 'birthdate',
   				titleClass: 'center aligned',
   				dataClass: 'center aligned',
   				callback: 'formatDate|DD-MM-YYYY'
   			}, {
   				name: 'nickname',
+          sortField: 'nickname',
   				callback: 'allcap'
   			}, {
   				name: 'gender',
+          sortField: 'gender',
   				titleClass: 'center aligned',
   				dataClass: 'center aligned',
   				callback: 'genderLabel'
   			}, {
   				name: 'salary',
+          sortField: 'salary',
   				titleClass: 'center aligned',
   				dataClass: 'right aligned',
   				callback: 'formatNumber',
