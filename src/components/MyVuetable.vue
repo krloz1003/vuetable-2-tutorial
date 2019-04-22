@@ -62,7 +62,8 @@ export default {
   				name: 'salary',
   				titleClass: 'center aligned',
   				dataClass: 'right aligned',
-  				callback: 'formatNumber'
+  				callback: 'formatNumber',
+          visible: false
   			}
 
 
