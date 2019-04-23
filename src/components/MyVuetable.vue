@@ -12,6 +12,7 @@
     :multi-sort="true"
     :sort-order="sortOrder"
     multi-sort-key="ctrl"
+    @vuetable:cell-clicked="onCellClicked"
 		@vuetable:pagination-data="onPaginationData"
     :append-params="appendParams"
     detail-row-component="detailRowComponent"
@@ -128,6 +129,10 @@ props: {
     onAction (action, data, index) {
       console.log('slot) action: ' + action, data.name, index)
     },
+    onCellClicked (data, field, event) {
+      console.log('cellClicked: ', field.name)
+      this.$refs.vuetable.toggleDetailRow(data.id)
+    },    
     onFilterSet (filterText) {
       this.appendParams = {
         'filter': filterText
