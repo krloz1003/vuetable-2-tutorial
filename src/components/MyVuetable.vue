@@ -5,14 +5,16 @@
       <filter-bar></filter-bar>
 	  </div>  	
 		<vuetable ref="vuetable"
-		api-url="https://vuetable.ratiw.net/api/users"
-		:fields=fields
+		:api-url="apiUrl"
+		:fields="fields"
 		pagination-path=""
-		:per-page="20"
+		:per-page="10"
     :multi-sort="true"
+    :sort-order="sortOrder"
     multi-sort-key="ctrl"
 		@vuetable:pagination-data="onPaginationData"
-    :append-params="moreParams"
+    :append-params="appendParams"
+    detail-row-component="detailRowComponent"
 		>
     <template slot="actions" slot-scope="props">
       <div class="custom-actions">
@@ -47,18 +49,18 @@
 <script>
 import accounting from 'accounting'
 import moment from 'moment'
+import Vue from 'vue'
+import VueEvents from 'vue-events'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
-import Vue from 'vue'
-import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import FilterBar from './FilterBar'
-import FieldDefs from './FieldDefs.js'
 
+Vue.use(VueEvents)
 Vue.component('custom-actions', CustomActions)
 Vue.component('filter-bar', FilterBar)
-Vue.use(VueEvents)
+
 
 export default {
   components: {
@@ -66,15 +68,33 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo
   },
+props: {
+    apiUrl: {
+      type: String,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    },
+    sortOrder: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    appendParams: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    detailRowComponent: {
+      type: String
+    }
+  },  
   data() {
-  	return {
-      css: {
-          ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down'
-      },
-  		fields: FieldDefs,
-      moreParams: {}
-  	}
+  	return {}
   },
   mounted() {
     this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
@@ -109,14 +129,14 @@ export default {
       console.log('slot) action: ' + action, data.name, index)
     },
     onFilterSet (filterText) {
-      this.moreParams = {
+      this.appendParams = {
         'filter': filterText
       }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
       console.log('filter-set', 'filterText')      
     },
     onFilterReset () {
-      this.moreParams = {}
+      this.appendParams = {}
       Vue.nextTick(() => this.$refs.vuetable.refresh())
       console.log('filter-reset')
     }
