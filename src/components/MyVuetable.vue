@@ -54,6 +54,7 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import FilterBar from './FilterBar'
+import FieldDefs from './FieldDefs.js'
 
 Vue.component('custom-actions', CustomActions)
 Vue.component('filter-bar', FilterBar)
@@ -71,71 +72,7 @@ export default {
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down'
       },
-  		fields: [/*{
-        name: '__sequence', // Mustra el número de secuencia de los registros en función de la información de paginación
-        title: '#',
-        titleClass: 'center aligned',
-        dataClass: 'right aligned'
-      }*/
-      /*{
-        name: '__handle', // Este fue creado específicamente porque necesitamos hacer un icono de manejador para Sortable.js
-        dataClass: 'center aligned'
-      }*/
-      /*{
-        name: '__checkbox',
-        titleClass: 'center aligned',
-        dataClass: 'center aligned'
-      }*/
-      {
-  			name: 'name',
-        sortField: 'name'
-      }, { 
-        name: 'email',
-        sortField: 'email',
-        direction: 'asc'
-      }, {
-  				name: 'birthdate',
-          sortField: 'birthdate',
-  				titleClass: 'center aligned',
-  				dataClass: 'center aligned',
-  				callback: 'formatDate|DD-MM-YYYY'
-  			}, {
-  				name: 'nickname',
-          sortField: 'nickname',
-  				callback: 'allcap'
-  			}, {
-  				name: 'gender',
-          sortField: 'gender',
-  				titleClass: 'center aligned',
-  				dataClass: 'center aligned',
-  				callback: 'genderLabel'
-  			}, {
-  				name: 'salary',
-          sortField: 'salary',
-  				titleClass: 'center aligned',
-  				dataClass: 'right aligned',
-  				callback: 'formatNumber',
-          visible: false
-  			}, {          
-          //name: '__component:custom-actions', // DE esta manera obtenemos las acciones desde el componente que creamos.
-          name: '__slot:actions',
-          title: 'Actions',
-          titleClass: 'center aligned',
-          dataClass: 'center aligned'
-        } 
-
-
-  			/* {
-  				name: 'address.line1',
-  				title: 'Address 1',
-  			}, {
-  				name: 'address.line2',
-  				title: 'Address 2',
-  			}, {
-  				name: 'address.zipcode',
-  				title: 'Zipcode'
-  			}*/
-  		],
+  		fields: FieldDefs,
       moreParams: {}
   	}
   },
