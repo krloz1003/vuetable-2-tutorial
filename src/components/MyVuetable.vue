@@ -1,14 +1,9 @@
 <template>
   <div class="ui container">
-	    <div class="vuetable-pagination ui basic segment grid">
-		  	<!-- Lección 8 -->
-		  	<vuetable-pagination-info ref="paginationInfoTop"
-		  	></vuetable-pagination-info>
-		  	<!-- Lección 7 -->
-		  	<vuetable-pagination ref="paginationTop"
-		  		@vuetable-pagination:change-page="onChangePage"
-		  	></vuetable-pagination>
-		</div>  	
+      
+    <div class="vuetable-pagination ui basic segment grid">
+      <filter-bar></filter-bar>
+	  </div>  	
 		<vuetable ref="vuetable"
 		api-url="https://vuetable.ratiw.net/api/users"
 		:fields=fields
@@ -17,6 +12,7 @@
     :multi-sort="true"
     multi-sort-key="ctrl"
 		@vuetable:pagination-data="onPaginationData"
+    :append-params="moreParams"
 		>
     <template slot="actions" slot-scope="props">
       <div class="custom-actions">
@@ -55,9 +51,13 @@ import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
+import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
+import FilterBar from './FilterBar'
 
 Vue.component('custom-actions', CustomActions)
+Vue.component('filter-bar', FilterBar)
+Vue.use(VueEvents)
 
 export default {
   components: {
@@ -135,9 +135,14 @@ export default {
   				name: 'address.zipcode',
   				title: 'Zipcode'
   			}*/
-  		]
+  		],
+      moreParams: {}
   	}
   },
+  mounted() {
+    this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
+    this.$events.$on('filter-reset', e => this.onFilterReset())
+  },  
   methods: {
   	allcap (value) {
   		return value.toUpperCase()
@@ -156,8 +161,6 @@ export default {
   		: moment(value, 'YYYY-MM-DD').format(fmt)
   	},
   	onPaginationData (paginationData) {
-		this.$refs.paginationTop.setPaginationData(paginationData)
-		this.$refs.paginationInfoTop.setPaginationData(paginationData)
 
   		this.$refs.pagination.setPaginationData(paginationData)
   		this.$refs.paginationInfo.setPaginationData(paginationData)
@@ -167,6 +170,18 @@ export default {
   	},
     onAction (action, data, index) {
       console.log('slot) action: ' + action, data.name, index)
+    },
+    onFilterSet (filterText) {
+      this.moreParams = {
+        'filter': filterText
+      }
+      Vue.nextTick(() => this.$refs.vuetable.refresh())
+      console.log('filter-set', 'filterText')      
+    },
+    onFilterReset () {
+      this.moreParams = {}
+      Vue.nextTick(() => this.$refs.vuetable.refresh())
+      console.log('filter-reset')
     }
   }
 }
